@@ -1,7 +1,4 @@
-
-
-
-
+#!/usr/bin/python3
 import unittest
 from pid import PIDControl
 

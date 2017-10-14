@@ -20,7 +20,7 @@ class PIDControl():
         return diff
     
 
-    def getError(self, target, current)
+    def getError(self, target, current):
         return target - current
 
 
@@ -31,7 +31,7 @@ class PIDControl():
             return minVal
         return val
 
-    def getDemand(self, target, current)
+    def getDemand(self, target, current):
 
         if self.first:
             self.prevTime = time.time() 
@@ -45,9 +45,9 @@ class PIDControl():
         if dt == 0:
             return
 
-        if(self.isAngle)
+        if(self.isAngle):
             proportionError = self.getErrorAngle(target, current)
-        else
+        else:
             proportionError = self.getError(target, current)
         proportionError = self.clamp(proportionError, -errorMax, errorMAX)
 
