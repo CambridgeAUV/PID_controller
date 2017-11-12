@@ -1,6 +1,4 @@
-
 #!/usr/bin/env python
-
 import rospy
 import json
 from something import MotorDemand
@@ -76,6 +74,7 @@ class Controller():
             self.add_row_demands()
             self.add_external_demands()
             
+#
             motor_demand_msg = MotorDemand()
             motor_demand_msg.motor0 = self.motor_demands[0]
             motor_demand_msg.motor1 = self.motor_demands[0]
