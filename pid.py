@@ -1,64 +1,68 @@
-
+#!/usr/bin/env python
 import time
 
 class PIDControl():
 
-    def __init__(self, kp, ki, kd, isAngle):
+    def __init__(self, kp, ki, kd, is_angle):
         self.kp = kp
         self.ki = ki
         self.kd = kd
-        self.isAngle = isAngle
+        self.is_angle = is_angle
         self.first = True
-        self.integralError = 0
-        self.prevError = 0
+        self.integral_error = 0
+        self.prev_error = 0
+
+        self.error_max = 100 # 100 is completely arbitary
 
 
-    def getErrorAngle(self, target, current):
+    def get_error_angle(self, target, current):
         diff = (target - current)%360
         if diff > 180:
             diff = diff - 360
         return diff
     
 
-    def getError(self, target, current):
+    def get_error(self, target, current):
         return target - current
 
 
-    def clamp(self, val, minVal, maxVal):
-        if val > maxVal:
-            return maxVal
-        elif val < minVal:
-            return minVal
+    def clamp(self, val, min_val, max_val):
+        if val > max_val:
+            return max_val
+        elif val < min_val:
+            return min_val
         return val
 
-    def getDemand(self, target, current):
+    def get_demand(self, target, current):
 
         if self.first:
-            self.prevTime = time.time() 
+            self.prev_time = time.time() 
             return
 
         # time since last call in seconds
-        dt = time.time() - self.prevTime
-        self.prevTime = time.time()
+        dt = time.time() - self.prev_time
+        self.prev_time = time.time()
 
         # prevent division by zero
         if dt == 0:
             return
 
-        if(self.isAngle):
-            proportionError = self.getErrorAngle(target, current)
+        proportion_error = 0
+
+        if(self.is_angle):
+            proportion_error = self.get_error_angle(target, current)
         else:
-            proportionError = self.getError(target, current)
-        proportionError = self.clamp(proportionError, -errorMax, errorMAX)
+            proportion_error = self.get_error(target, current)
+        proportion_error = self.clamp(proportion_error, -self.error_max, self.error_max)
 
-        self.integralError += error * dt
-        self.integralError = clamp(integralError, -errorMax, errorMAX)
+        self.integral_error += error * dt
+        self.integral_error = clamp(integral_error, -self.error_max, self.error_max)
 
-        derivativeError = (error - self.prevError) / dt
-        derivativeError = clamp(derivativeError, -errorMax, errorMAX)
+        derivative_error = (error - self.prev_error) / dt
+        derivative_error = clamp(derivative_error, -self.error_max, self.error_max)
 
-        demand = (self.kp * proportionError + 
-                 self.ki * self.integralError + 
-                 self.kd * derivativeError)
+        demand = (self.kp * proportion_error + 
+                 self.ki * self.integral_error + 
+                 self.kd * derivative_error)
 
         return demand
